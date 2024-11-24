@@ -1,10 +1,11 @@
-const XampleService = require("../services/XampleService");
+//const userService = require("../services/user.service");
 const axios = require("axios");
 const dotenv = require('dotenv')
 dotenv.config();
 const KOKUSHIMUSOU_SERVER = "http://localhost:"+process.env.PORT;
 
 exports.index = async (req, res) => {
+  // TODO: Render Homepage
   const obj_operator = {};
   let response = await axios.get(KOKUSHIMUSOU_SERVER+"/get", obj_operator);
   response = response.data.hello[0];
@@ -31,6 +32,36 @@ exports.getHelloWorld = async (req, res) => {
   }
 }
 
+exports.registerPage = async (req, res) => {
+  // Not implemented
+}
+
+exports.registerRequest = async (req, res) => {
+  // Not implemented
+}
+
+exports.loginPage = async (req, res) => {
+  // Not implemented
+}
+
+exports.loginRequest = async (req, res) => {
+  // Not implemented
+}
+
+exports.logout = async (req, res) => {
+  // Not implemented
+}
+
+/*exports.getXampleGet = async (req, res) => {
+  try {
+    //const req_body = req.body;
+    const response = await XampleService.processXampleGet();
+    res.send({ result: true, hello: response });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+}*/
+
 // exports.getXampleCreate = async (req, res) => {
 //   try {
 //     //const req_body = req.body;
@@ -40,13 +71,3 @@ exports.getHelloWorld = async (req, res) => {
 //     res.send({ error: error.message });
 //   }
 // }
-
-exports.getXampleGet = async (req, res) => {
-  try {
-    //const req_body = req.body;
-    const response = await XampleService.processXampleGet();
-    res.send({ result: true, hello: response });
-  } catch (error) {
-    res.send({ error: error.message });
-  }
-}

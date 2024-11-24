@@ -2,25 +2,24 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
-const router = require('./router.js');
+const router = require('./routes/router.js');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const dotenv = require('dotenv')
+const User = require('./models/user');
+
 dotenv.config();
-const queryString = process.env.MONGODB_URI
+const queryString = process.env.MONGODB_URI;
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(express.json());
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/hello", async (req, res) => {
-  res.send("App ...");
-})
-
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'views')) 
 app.set('view engine', 'ejs')
-app.use(express.json())
-app.use(express.urlencoded({ extended: false, limit: '10mb' }))
+//app.use(express.json())
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -38,10 +37,9 @@ mongoose.connect(queryString, {
   useUnifiedTopology: true
 }).then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('MongoDB connection error:', err.message));
+
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}`);
 })
 
-module.exports = [
-  app
-]
+module.exports = app
