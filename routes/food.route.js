@@ -12,7 +12,6 @@ router.get('/create', foodController.createFoodPage); // add new food
 router.post('/create', foodController.createFoodRequest);
 
 router.get('/:id', foodController.foodDetailPage); // detail of one food
-//router.get('/:id/like', foodController.foodLikeRequest); // add food to favorites
 
 module.exports = [
   router

@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true,
-        trim: true,
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    },
+    username: {
+        type: String,
+        required: true
     },
     password: {
         type: String,
-        required: true,
+        required: true
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     }
 }, { timestamps: true });
 

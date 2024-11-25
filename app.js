@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -10,10 +11,6 @@ const User = require('./models/user');
 
 dotenv.config();
 const queryString = process.env.MONGODB_URI;
-
-//app.use(express.json());
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('views', path.join(__dirname, 'views')) 
 app.set('view engine', 'ejs')
@@ -28,6 +25,14 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/public', express.static('public'));
+
+// session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'A randomly generated confusing string',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 //sử dụng file router.js
 app.use('/', router);

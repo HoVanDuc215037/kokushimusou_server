@@ -7,14 +7,7 @@
     <link rel="stylesheet" href="/public/css/xamplepage.css">
 </head>
 <body>
-    <nav>
-        <div>
-            <a href="/">ロゴ</a>
-            <a href="/home">ホームページ</a>
-            <a href="/favorites">お気に入り</a>
-            <span>こんにちは, <%= username %></span>
-        </div>
-    </nav>
+    <div class="page-header"><%- include('partials/header.ejs') %></div>
     <main>
         <div class="form-container">
 
@@ -42,19 +35,22 @@
                             <textarea id="description" name="description" required></textarea>
 
                             <label for="ingredients">材料</label>
-                            <textarea id="ingredients" name="ingredients"></textarea>
+                            <textarea id="ingredients" name="ingredients" required></textarea>
 
                             <label for="recipe">作り方</label>
-                            <textarea id="recipe" name="recipe"></textarea>
+                            <textarea id="recipe" name="recipe" required></textarea>
 
                             <label for="locations">おすすめの店</label>
-                            <input type="text" id="locations" name="locations">
+                            <input type="text" id="locations" name="locations" required>
+
+                            <!-- TODO: Food Tag Input -->
+                            <!-- Render notification to show that request is OK -->
                         </div>
                         <div class="form-right">
                             <label for="image">画像挿入</label>
-                            <input type="file" id="image" name="image" accept="image/*" onchange="handleImageUpload(event)" required>
-                            <input type="hidden" id="image_base64" name="image_base64">
-                            <img id="imagePreview" alt="Food Item Preview" style="display: none; width: 200px; height: 200px;">
+                            <input type="file" id="image" name="image" accept="image/*" onchange="handleImageUpload(event)" required style="display: none;" required>
+                            <input type="hidden" id="image_base64" name="image_base64" required>
+                            <img id="imagePreview" src="/public/img/blank.png" alt="Food Item Preview" style="width: 200px; height: 200px; cursor: pointer;" onclick="document.getElementById('image').click();">
                             <button type="submit">投稿</button>
                         </div>
                     </div>
@@ -62,48 +58,45 @@
             </div>
         </div>
     </main>
-    <script>
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById('image_base64').value = reader.result;
-                const imagePreview = document.getElementById('imagePreview');
-                imagePreview.src = reader.result;
-                imagePreview.style.display = 'block';
-            }
-            if (file) {
-                reader.readAsDataURL(file);
-            }
+<script>
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            document.getElementById('image_base64').value = reader.result;
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = reader.result;
+            imagePreview.style.display = 'block';
         }
-
-        function switchToCreateForm() {
-          const createFormPanel = document.getElementById('create-form');
-          const foodListPanel = document.getElementById('food-list');
-
-          foodListPanel.classList.remove('active');
-
-          createFormPanel.classList.add('active');
-
-          // (Optional) Clear any previously displayed food items from the list
-          // document.getElementById('food-items').innerHTML = ''; // Clear the list
+        if (file) {
+            reader.readAsDataURL(file);
         }
+    }
 
-        function switchToList() {
-          const createFormPanel = document.getElementById('create-form');
-          const foodListPanel = document.getElementById('food-list');
+    function switchToCreateForm() {
+        const createFormPanel = document.getElementById('create-form');
+        const foodListPanel = document.getElementById('food-list');
 
-          createFormPanel.classList.remove('active');
+        foodListPanel.classList.remove('active');
+        createFormPanel.classList.add('active');
+        // (Optional) Clear any previously displayed food items from the list
+        // document.getElementById('food-items').innerHTML = ''; // Clear the list
+    }
 
-          foodListPanel.classList.add('active');
+    function switchToList() {
+        const createFormPanel = document.getElementById('create-form');
+        const foodListPanel = document.getElementById('food-list');
 
-          // Implement logic to fetch and populate the list of added food items
-          // This could involve making an API call to your server or using existing data
-          // fetchFoodList(); // Example function call to fetch data (not implemented here)
-        }
+        createFormPanel.classList.remove('active');
+        foodListPanel.classList.add('active');
 
-    </script>
-    <style>
+        // Implement logic to fetch and populate the list of added food items
+        // This could involve making an API call to your server or using existing data
+        // fetchFoodList(); // Example function call to fetch data (not implemented here)
+    }
+
+</script>
+<style>
 .tab-nav {
     list-style: none;
     padding: 0;
@@ -140,6 +133,12 @@
 .tab-panel.active {
     display: block; /* Show active tab panel */
 }
-    </style>
+
+#imagePreview {
+    border: 1px solid #ccc; /* Optional: Add a border around the image */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    margin-top: 10px; /* Space between the input and the image */
+}
+</style>
 </body>
 </html>
