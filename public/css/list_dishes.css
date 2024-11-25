@@ -1,0 +1,185 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+span.search-bar {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 70%;
+  padding: 10px 5px;
+  background: #aeadad;
+}
+
+input.search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: unset;
+  color: #fff;
+}
+
+img.searchic.icon {
+  position: absolute;
+  right: 10;
+  width: 15px;
+  height: 16px;
+}
+
+.dishes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+img.heartic.icon {
+  width: 11px;
+  height: 10px;
+}
+
+img.startic.icon {
+  width: 12px;
+  height: 12px;
+}
+
+.grid-dishes {
+  background: #aeadad;
+  width: 70%;
+  padding: 10px;
+  display: grid;
+  justify-items: center;
+  grid-template-columns: auto auto auto auto;
+  column-gap: 10px;
+  row-gap: 20px;
+}
+
+span.group-detail-like-rate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 8px;
+  padding: 0 5px;
+}
+
+span.group-infor.rate {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-direction: row;
+}
+
+.group-infor {
+  background: #a3dea4;
+  height: 20px;
+  padding: 0px 7px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+}
+
+span.onedish-img-border {
+  width: 100%;
+  height: 100px;
+  border: none;
+}
+
+img.dishes-image {
+  height: 100%;
+  width: 100%;
+  border: none;
+}
+
+.onedish {
+  display: flex;
+  flex-direction: column;
+  /* height: max-content; */
+  /* padding: 10px; */
+  background: #fff;
+  border-radius: 8px;
+  padding: 0 0 10px 0;
+  border: none;
+  width: 15vw;
+}
+
+span.onedish-name {
+  width: calc(100% - 10px);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  border: none;
+  overflow: hidden;
+}
+
+span.back-btn-container {
+  width: 66%;
+}
+
+span.back-btn {
+  background: #de9a9a;
+  padding: 3px 6px;
+  border-radius: 5px;
+}
+
+.column-list-dishes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  width: 65%;
+  background: #94ce81;
+}
+
+span.onelikedish-img-border {
+  width: 100px;
+}
+
+.onelikedish {
+  display: flex;
+}
+
+.onelikedish {
+  width: calc(100% - 20px);
+  padding: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+img.eyeic.icon {
+  width: 14px;
+  height: 10px;
+}
+
+img.trashic.icon {
+  width: 12px;
+  height: 15px;
+}
+
+span.likedishese-name-image {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+img.likedishes-image {
+  width: 100%;
+  height: 50px;
+}
+
+span.group-detail-delete {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.main-page.like-dishes {
+  display: none;
+}
