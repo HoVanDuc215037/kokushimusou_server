@@ -30,3 +30,15 @@ exports.createFood = async (foodData) => {
         throw new Error('Error creating food item: ' + error.message);
     }
 };
+
+exports.getFoodById = async (foodId) => {
+    try {
+        const food = await Food.findById(foodId);
+        if (!food) {
+            throw new Error('Food item not found');
+        }
+        return food;
+    } catch (error) {
+        throw new Error('Error fetching food item by ID: ' + error.message);
+    }
+};

@@ -7,7 +7,8 @@ const KOKUSHIMUSOU_SERVER = "http://localhost:"+process.env.PORT;
 
 exports.foodsPage = async (req, res) => {
     // TODO: Render Food List
-
+    const foods = await foodService.getFoods();
+    res.render('list_food', { username: "hello", foods });
 }
 
 exports.anketPage = async (req, res) => {
@@ -48,4 +49,6 @@ exports.createFoodRequest = async (req, res) => {
 
 exports.foodDetailPage = async (req, res) => {
     // Not implemented
+    const food = await foodService.getFoodById(req.params.id);
+    // res.render('show_food', { username, food });
 }
