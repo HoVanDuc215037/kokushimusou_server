@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホームページ</title>
+    <link rel="stylesheet" href="/public/css/xamplepage.css">
+</head>
+<body>
+    <div class="page-header"><%- include('partials/header.ejs') %></div>
+    <main>
+        <input type="text" class="search-bar" placeholder="Search food by name..." id="foodSearch">
+        <section class="food-list" id="foodList">
+            <% for (const food of foods) { %>
+                <article class="food-item" data-name="<%= food.name.toLowerCase() %>">
+                    <a href="/food/<%= food._id %>">
+                        <div class="food-image">
+                            <img src="<%= food.image %>" alt="<%= food.name %> Image" style="height: 200px; width: auto;">
+                        </div>
+                    </a>
+                    <p><strong><%= food.name %></strong></p>
+                    <p><%= food.description %></p>
+                    <div class="food-buttons">
+                        <button class="food-button">Button 1</button>
+                        <button class="food-button">Button 2</button>
+                        <button class="food-button">Button 3</button>
+                    </div>
+                </article>
+            <% } %>
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('foodSearch');
+        const foodItems = document.querySelectorAll('.food-item');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            foodItems.forEach(item => {
+                const foodName = item.getAttribute('data-name');
+                if (foodName.includes(searchTerm)) {
+                    item.style.display = ''; // Show item
+                } else {
+                    item.style.display = 'none'; // Hide item
+                }
+            });
+        });
+    </script>
+    <style>
+        nav {
+            display: flex; /* Allow horizontal layout */
+            justify-content: space-between; /* Distribute items evenly */
+            align-items: center; /* Align vertically */
+            padding: 10px 20px;
+        }
+        main {
+            padding: 20px;
+        }
+        .food-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 0 auto; /* Center horizontally */
+        }
+        .food-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        /*.food-image {
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 10px;
+        }*/
+        .food-image {
+            width: 100%; /* Make the image container full width */
+            height: 200px; /* Set a fixed height */
+            overflow: hidden; /* Hide overflow */
+            position: relative; /* Position relative for absolute positioning of img */
+        }
+        .food-image img {
+            width: 100%; /* Make the image full width */
+            height: 100%; /* Make the image full height */
+            object-fit: cover; /* Cover the area while maintaining aspect ratio */
+            position: center; /* Position absolutely to fill the container */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
+        }
+        .food-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .food-button {
+            /* Style your buttons here */
+        }
+
+        /* Media queries for responsive adjustments */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column; /* Stack items vertically */
+                align-items: flex-start; /* Left-align items */
+            }
+            .food-list {
+                flex-direction: column; /* Display items in a single column */
+            }
+            .food-item {
+                width: 100%; /* Full width on small screens */
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 992px) {
+            .food-item {
+                width: 33.33%; /* Adjust width for 3 items per row */
+            }
+        }
+
+        @media (min-width: 992px) {
+            .food-item {
+                width: 20%; /* Adjust width for 5 items per row as before */
+            }
+        }
+
+        .search-bar {
+            width: 80%; /* Adjust width as needed */
+            margin: 10px auto;
+            padding: 5px;
+            border: 1px solid #ccc;
+            height: 30px; /* Adjust height as needed */
+        }
+    </style>
+</body>
+</html>
