@@ -2,39 +2,36 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     title: {
-      type: String,
-      required: true
+        type: String,
+        required: true
     },
     description: {
-      type: String,
+        type: String,
     },
     ingredients: {
-      type: String,
+        type: String,
     },
     instructions: {
-      type: String,
+        type: String,
     },
     suggestedPlaces: {
-      type: String,
+        type: String,
     },
     imageUrl: {
-      type: String,
+        type: String,
     },
     status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending'
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
     }
     // them tag mon an -> map
-  });
-  
-  module.exports = mongoose.model('Post', postSchema);
+}, { timestamps: true });
+
+const Post = mongoose.model('Post', postSchema);
+module.exports = Post;

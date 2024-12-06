@@ -1,0 +1,49 @@
+.header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+  background: #aeadad;
+}
+
+.header-component {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.header-group-btn {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.list-hidden-btn {
+  position: relative;
+  width: 100%;
+  display: none;
+}
+
+span.group-hidden-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: absolute;
+  top: 11px;
+  width: 100%;
+}
+
+.header-btn {
+  text-align: center;
+  background: #b11111;
+  color: #fff;
+  padding: 10px;
+}
+
+.user-name {
+  min-width: 120px;
+}
+
+.group-btn:hover .list-hidden-btn {
+  display: flex;
+}
