@@ -8,6 +8,8 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const dotenv = require('dotenv')
 const User = require('./models/user');
+const surveyRoute = require('./routes/survey.route');
+
 
 dotenv.config();
 const queryString = process.env.MONGODB_URI;
@@ -36,6 +38,7 @@ app.use(session({
 
 //sử dụng file router.js
 app.use('/', router);
+app.use(surveyRoute);
 
 mongoose.connect(queryString, {
   useNewUrlParser: true,

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アンケートフォーム</title>
+  <link rel="stylesheet" href="../public/css/survey.css">
+</head>
+<body>
+  <div class="survey-container">
+    <header>
+      <h1>アンケートフォーム</h1>
+    </header>
+
+    <section class="survey-content">
+      <h3>食品嗜好調査票</h3>
+
+      <div class="question">
+        <label>体重管理をされていますか?</label>
+        <div class="choice">
+          <input type="radio" name="weight_management" value="yes" id="yes"> <label for="yes">O</label>
+          <input type="radio" name="weight_management" value="no" id="no"> <label for="no">X</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>お好みの料理の味をお選びください。</label>
+        <select id="taste" name="taste">
+          <option value="">料理の味を選択してください</option>
+          <option value="辛味">辛味</option>
+          <option value="酸味">酸味</option>
+          <option value="塩味">塩味</option>
+          <option value="甘味">甘味</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>ご希望の料理の種類をお選びください。</label>
+        <select id="dish_type" name="dish_type">
+          <option value="">料理の種類を選択してください</option>
+          <option value="乾いた皿">乾いた皿</option>
+          <option value="水皿">水皿</option>
+          <option value="デザート">デザート</option>
+          <option value="ベジタリアン料理">ベジタリアン料理</option>
+        </select>
+      </div>
+    </section>
+
+    <footer>
+      <button id="submit-survey">完了</button>
+    </footer>
+  </div>
+
+  <script src="/javascript/survey.js"></script>
+</body>
+</html>

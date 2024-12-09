@@ -1,0 +1,116 @@
+/* Tổng quan */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Container chính của khảo sát */
+.survey-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Phần header */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+
+/* Tiêu đề khảo sát */
+.survey-content h3 {
+  font-size: 18px;
+  margin: 20px 0;
+  color: #333;
+  text-align: center;
+}
+
+/* Câu hỏi */
+.question {
+  margin-bottom: 20px;
+}
+
+.question .choice {
+    display: flex;
+    width: 30%;
+    justify-content:space-between
+}
+
+.question .choice label {
+    margin: 0;
+    margin-top: 3px;
+    margin-right: 40px;
+}
+
+.question label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.question input[type="radio"] {
+  margin-right: 5px;
+}
+
+.question select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+/* Nút hoàn thành */
+footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+footer button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+footer button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .survey-container {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 20px;
+  }
+
+  header h2 {
+    font-size: 14px;
+  }
+
+  footer button {
+    width: 100%;
+  }
+}
