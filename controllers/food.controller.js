@@ -39,11 +39,11 @@ exports.createFoodRequest = async (req, res) => {
 
     try {
         const foodItem = await foodService.createFood(foodData);
-        // Respond with a success message
-        res.status(201).json({ message: 'Food item created successfully!', foodItem });
+        req.flash('success_msg', 'Food item created successfully!');
+        res.redirect('/food/create');
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error creating food item.' });
+        req.flash('error_msg', 'Error creating food item.');
+        res.redirect('/food/create');
     }
 };
 

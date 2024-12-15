@@ -52,6 +52,12 @@
                             <input type="hidden" id="image_base64" name="image_base64" required>
                             <img id="imagePreview" src="/public/img/blank.png" alt="Food Item Preview" style="width: 200px; height: 200px; cursor: pointer;" onclick="document.getElementById('image').click();">
                             <button type="submit">投稿</button>
+                            <% if (success_msg.length > 0) { %>
+                                <div class="alert alert-success"><%= success_msg %></div>
+                            <% } %>
+                            <% if (error_msg.length > 0) { %>
+                                <div class="alert alert-danger"><%= error_msg %></div>
+                            <% } %>
                         </div>
                     </div>
                 </form>
