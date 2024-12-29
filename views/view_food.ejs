@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= food.name %></title>
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <link rel="stylesheet" href="/public/css/xamplepage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <div class="page-header"><%- include('partials/header.ejs') %></div>
+  <main>
+    <div class="container">
+    <div class="food-detail">
+      <div class="food-image">
+        <img src="<%= food.image %>" alt="Food Image" style="height: 200px;">
+        <!-- お気に入りボタン -->
+        <button class="food-button btn-like" data-food-id="<%= food._id %>"><i class="fa fa-thumbs-up"></i>お気に入り</button>
+        <br><br>
+        <%
+          let totalRating = 0;
+          let averageRating = 0;
+
+          if (food.comments && food.comments.length > 0) {
+            for (const comment of food.comments) {
+              totalRating += comment.rating;
+            }
+            averageRating = (totalRating / food.comments.length).toFixed(1);
+          }
+        %>
+        <button class="food-button"><i class="fa fa-star"></i>レーティング：<%= averageRating %></button>
+      </div>
+      <div class="food-info">
+        <h2><%= food.name %></h2>
+        <p>料理の説明: <%= food.description %></p>
+        <p>材料: <%= food.ingredients %></p>
+        <p>作り方: <%= food.recipe %></p>
+        <p>おすすめの店: <%= food.locations %></p>
+        <p>体重管理: <%= food.weight_management === 'yes' ? 'O' : 'X' %></p> 
+        <p>料理の味: <% for (const taste of food.tastes) { %>
+                    <%= taste %> 
+                    <% if (taste !== food.tastes[food.tastes.length - 1]) { %> 
+                        , 
+                    <% } %> 
+                <% } %></p>
+        <p>料理の種類: <% for (const dishType of food.dish_types) { %>
+                    <%= dishType %> 
+                    <% if (dishType !== food.dish_types[food.dish_types.length - 1]) { %> 
+                        , 
+                    <% } %> 
+                <% } %></p>
+      </div>
+    </div>
+
+    <h3>レビュー</h3>
+    <div class="reviews">
+      <ul>
+        <% for (const comment of food.comments) { %>
+          <li>
+            <span><strong><%= comment.username %>:</strong></span>
+            <%= comment.content %>
+            <span class="date"><%= new Date(comment.date).toLocaleDateString() %></span>
+            
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="fa fa-star <%= i <= comment.rating ? 'filled' : '' %>"></i>
+            <% } %>
+          </li>
+        <% } %>
+        <% if (food.comments.length < 1) {%> 
+          なし
+        <% } %>
+      </ul>
+    </div>
+
+    <h3>レビューを追加</h3>
+    <div class="add-review">
+      <input type="hidden" name="username" id="username" value="<%= username %>">
+      <div class="rating">
+        <i id="star1" class="fa fa-star clickable" onclick="rateStar(1)"></i>
+        <i id="star2" class="fa fa-star clickable" onclick="rateStar(2)"></i>
+        <i id="star3" class="fa fa-star clickable" onclick="rateStar(3)"></i>
+        <i id="star4" class="fa fa-star clickable" onclick="rateStar(4)"></i>
+        <i id="star5" class="fa fa-star clickable" onclick="rateStar(5)"></i>
+      </div>
+      <textarea id="commentText" placeholder="コメントを入力してください"></textarea>
+      <button id="submitReview">投稿</button>
+    </div>
+
+    </div>
+  </main>
+
+  
+  <script>
+  let selectedRating = 0; 
+
+  function rateStar(rating) {
+    selectedRating = rating;
+    // Highlight the selected stars
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        document.getElementById(`star${i}`).classList.add('filled'); 
+      } else {
+        document.getElementById(`star${i}`).classList.remove('filled'); 
+      }
+    }
+  }
+
+  document.getElementById('submitReview').addEventListener('click', async () => {
+    const commentText = document.getElementById('commentText').value;
+    const username = document.getElementById('username').value;
+
+    if (selectedRating === 0) {
+      alert('レーティングを選んでください。');
+      return;
+    }
+
+    try {
+      console.log(JSON.stringify({
+          rating: selectedRating,
+          username,
+          text: commentText,
+          date: new Date().toISOString() 
+        }))
+      const response = await fetch(window.location.href+'/review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rating: selectedRating,
+          username,
+          content: commentText,
+          date: new Date().toISOString() 
+        })
+      });
+
+      if (response.ok) {
+        alert('レビューが投稿されました。');
+        window.location.reload();
+      } else {
+        alert('レビューの投稿に失敗しました。');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('レビューの投稿中にエラーが発生しました。');
+    }
+  });
+
+  const likeButtons = document.querySelectorAll('.btn-like');
+
+  likeButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const foodId = button.dataset.foodId;
+
+      try {
+        const response = await fetch(`/food/${foodId}/like`, {
+          method: 'GET', 
+        });
+
+        if (response.ok) {
+          alert('お気に入りに登録しました。'); 
+        } else {
+          alert('お気に入りに登録できませんでした。');
+        }
+      } catch (error) {
+        console.error('Error liking food:', error);
+        alert('エラーが発生しました。');
+      }
+    });
+  });
+  </script>
+  <style>
+    body {
+      text-align: center;
+      margin: 0;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .food-detail, .reviews, .add-review {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .food-image {
+      flex: 0 0 200px;
+    }
+    .add-review {
+      display: flex;
+      flex-direction: column; /* Make the elements within .add-review display vertically */
+      align-items: center; /* Center the elements horizontally */
+    }
+    .reviews {
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    .rating {
+      /*display: flex;
+      justify-content: space-between; */
+    }
+
+    .fa-star .clickable {
+      color: yellow;
+      cursor: pointer; /* Essential for visual feedback on hover */
+    }
+
+    .filled {
+      color: gold; 
+    }
+
+    .date {
+      text-align: right;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+.food-items {
+  list-style: none; /* Remove default bullet points */
+  padding: 0;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+}
+
+.food-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start; /* Căn các phần tử con vào phía bên trái */
+  width: 100%; /* Đảm bảo phần tử này chiếm đầy chiều rộng của cha */
+}
+
+
+.food-info img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
+}
+
+.view-button,
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-button {
+  background-color: #333;
+  color: white;
+}
+
+.delete-button {
+  background-color: #ccc;
+  color: black;
+}
+
+  </style>
+</body>
+</html>

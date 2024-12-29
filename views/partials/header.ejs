@@ -1,8 +1,35 @@
 <nav>
     <div>
-        <a href="/">ロゴ</a>
-        <a href="/home">ホームページ</a>
-        <a href="/favorites">お気に入り</a>
+        <img src="/img/logo.png" alt="ロゴ" style="width: 20px; height: auto;">
+        <a href="/">ホームページ</a>
     </div>
-    <span>こんにちは, Test</span>
+    <span class="dropdown"> こんにちは, <%= username %>さん
+    <ul class="dropdown-menu" style="display: none">
+        <% if (username == "ゲスト") { %> 
+            <li><a href="/login">ログイン</a></li>
+        <% } else { %>
+            <li><a href="#">プロファイル</a></li>
+            <li><a href="/user/survey">アンケート</a></li>
+            <li><a href="/food/create">料理を追加</a></li>
+            <li><a href="/food/favorites">好きな料理</a></li>
+            <% if (role == "admin") { %> 
+                <li><a href="/admin">料理管理</a></li>
+            <% } %>
+            <li><a href="/logout">ログアウト</a></li>
+        <% } %>
+        </ul>
+    </span>
 </nav>
+
+<script>
+  const dropdown = document.querySelector('.dropdown');
+  const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+  dropdown.addEventListener('mouseenter', () => {
+    dropdownMenu.style.display = 'block';
+  });
+
+  dropdown.addEventListener('mouseleave', () => {
+    dropdownMenu.style.display = 'none';
+  });
+</script>

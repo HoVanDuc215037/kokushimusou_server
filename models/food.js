@@ -7,11 +7,6 @@ const likeSchema = new mongoose.Schema({
         type: String,
         ref: 'User',
         required: true,
-    },
-    foodId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Food',
-        required: true,
     }
 }, { timestamps: true });
 
@@ -68,11 +63,15 @@ const foodSchema = new mongoose.Schema({
         type: String, // This will hold the base64 encoded image
         default: null,
     },
+    weight_management: { type: String, required: true },
+    tastes: [{ type: String }],
+    dish_types: [{ type: String }],
     comments: [commentSchema],
-    likes: [likeSchema],
-    approved: {
-        type: Boolean,
-        default: false,
+    likes: [{ type: String }],
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
     }
 }, { timestamps: true });
 

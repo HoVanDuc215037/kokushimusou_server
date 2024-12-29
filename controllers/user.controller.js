@@ -1,64 +1,88 @@
+const Survey = require('../models/survey');
 const userService = require('../services/user.service');
+const bcrypt = require('bcrypt');
 
-exports.saveSurveyData = async (req, res) => {
-  const data = { userId: req.body.userId, postId: req.body.postId }
-  try {
-    const survey = await userService.saveSurveyData(data);
-    if (survey) res.send({ result: true, message: "Saving survey's data done!", data: survey });
-    else {
-      res.send({ result: false, message: "Unknown error" });
+
+exports.getSurvey = async (req, res) => {
+  const username = req.session.username;
+  if (!username) res.redirect('/login');
+  else {
+    let survey = await userService.getSurveyByUsername(username);
+    if (!survey) { 
+      // If no survey exists, create a new empty survey object
+      survey = { 
+        weight_management: null, 
+        tastes: [], 
+        dish_types: [] 
+      }; 
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.render('survey', { username, survey });
   }
 };
 
-exports.getAllUser = async (req, res) => {
+exports.submitSurvey = async (req, res) => {
   try {
-    const user = await userService.getUser();
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching favorite user',
-      error: error.message
-    });
-  }
-}
+    const { username, weight_management, tastes, dish_types } = req.body;
 
-exports.processUserLikePost = async (req, res) => {
-  const data = { userId: req.body.userId, postId: req.body.postId }
-  try {
-    const favorites = await userService.processUserLikePost(data);
-    res.status(200).json({
-      success: true,
-      data: favorites
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error process favorite',
-      error: error.message
-    });
-  }
-}
+    if (!weight_management || !Array.isArray(tastes) || !Array.isArray(dish_types)) {
+      return res.status(400).json({ message: "不正なデータ形式です" });
+    }
 
-exports.getAllFavoritePostOfUser = async (req, res) => {
-  const userId = req.body.userId;
-  try {
-    const favorites = await userService.getFavoritePostOfAnUser(userId);
-    res.status(200).json({
-      success: true,
-      data: favorites
+    const survey = new Survey({
+      username,
+      weight_management,
+      tastes,
+      dish_types,
     });
+
+    // 保存処理中にエラーが発生した場合、詳細なエラーメッセージを出力
+    const result = await userService.saveSurvey(survey);
+    res.render('survey', { survey: result, message: "アンケートを保存しました。" });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching favorites',
-      error: error.message
-    });
+    console.error('Error saving survey:', error);
+    res.status(500).send('Internal Server Error'); // より適切なエラーコードを返す
   }
-}
+};
+
+exports.registerUser = async(email, username, password, confirm_password) => {
+    // Check if passwords match
+    if (password !== confirm_password) {
+        throw new Error("Passwords do not match");
+    }
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        throw new Error("User already exists");
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+        email,
+        username,
+        password: hashedPassword,
+    });
+
+    // Save the user to the database
+    await newUser.save();
+    return newUser;
+};
+
+exports.authenticateUser = async (username, password) => {
+    // Find the user by username
+    const user = await User.findOne({ username });
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    // Compare the password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error("Invalid password");
+    }
+
+    return user;
+};

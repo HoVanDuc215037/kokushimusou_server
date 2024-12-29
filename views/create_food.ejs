@@ -4,67 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>記事の作成</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="/public/css/xamplepage.css">
-</head>
-<body>
-    <div class="page-header"><%- include('partials/header.ejs') %></div>
-    <main>
-        <div class="form-container">
-
-            <ul class="tab-nav">
-                <li class="tab" data-tab="list" onclick="switchToList()">投稿記事を見る</li>
-                <li class="tab active" data-tab="create-form" onclick="switchToCreateForm()">記事を作成する</li>
-            </ul>
-
-            <div class="tab-content">
-                <div id="food-list" class="tab-panel">
-                    <h3>投稿記事を見る（Not implemented）</h3>
-                    <ul id="food-items">
-                        <!-- List of added food items will be populated here -->
-                    </ul>
-                </div>
-
-                <form id="create-form" action="/food/create" method="POST" class="tab-panel active">
-                    <input type="hidden" name="username" value="test">
-                    <div class="form-layout">
-                        <div class="form-left">
-                            <label for="name">料理の名前</label>
-                            <input type="text" id="name" name="name" required>
-
-                            <label for="description">説明</label>
-                            <textarea id="description" name="description" required></textarea>
-
-                            <label for="ingredients">材料</label>
-                            <textarea id="ingredients" name="ingredients" required></textarea>
-
-                            <label for="recipe">作り方</label>
-                            <textarea id="recipe" name="recipe" required></textarea>
-
-                            <label for="locations">おすすめの店</label>
-                            <input type="text" id="locations" name="locations" required>
-
-                            <!-- TODO: Food Tag Input -->
-                            <!-- Render notification to show that request is OK -->
-                        </div>
-                        <div class="form-right">
-                            <label for="image">画像挿入</label>
-                            <input type="file" id="image" name="image" accept="image/*" onchange="handleImageUpload(event)" required style="display: none;" required>
-                            <input type="hidden" id="image_base64" name="image_base64" required>
-                            <img id="imagePreview" src="/public/img/blank.png" alt="Food Item Preview" style="width: 200px; height: 200px; cursor: pointer;" onclick="document.getElementById('image').click();">
-                            <button type="submit">投稿</button>
-                            <% if (success_msg.length > 0) { %>
-                                <div class="alert alert-success"><%= success_msg %></div>
-                            <% } %>
-                            <% if (error_msg.length > 0) { %>
-                                <div class="alert alert-danger"><%= error_msg %></div>
-                            <% } %>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
-<script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script>
     function handleImageUpload(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -85,8 +28,6 @@
 
         foodListPanel.classList.remove('active');
         createFormPanel.classList.add('active');
-        // (Optional) Clear any previously displayed food items from the list
-        // document.getElementById('food-items').innerHTML = ''; // Clear the list
     }
 
     function switchToList() {
@@ -96,13 +37,176 @@
         createFormPanel.classList.remove('active');
         foodListPanel.classList.add('active');
 
-        // Implement logic to fetch and populate the list of added food items
-        // This could involve making an API call to your server or using existing data
-        // fetchFoodList(); // Example function call to fetch data (not implemented here)
+        const searchInput = document.getElementById('food-search');
+        const foodItems = document.querySelectorAll('.food-item');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            foodItems.forEach(item => {
+                const foodName = item.getAttribute('data-name');
+                if (foodName.includes(searchTerm)) {
+                    item.style.display = ''; // Show item
+                } else {
+                    item.style.display = 'none'; // Hide item
+                }
+            });
+        });
+
+        const viewButtons = document.querySelectorAll('.view-button');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const foodId = button.dataset.foodId;
+                window.open(`/food/${foodId}`, '_blank'); 
+            });
+        });
+
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const foodId = button.dataset.foodId;
+
+                try {
+                    const response = await fetch(`/food/${foodId}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Food deleted successfully');
+                        window.location.reload();
+                    } else {
+                        alert('Error deleting food');
+                    }
+                } catch (error) {
+                    console.error('Error deleting food:', error);
+                }
+            });
+        });
     }
 
+    document.getElementById('submit').addEventListener('click', async () => {
+        const weightManagement = document.querySelector('input[name="weight_management"]:checked');
+        const tasteCheckboxes = document.querySelectorAll('input[name="taste"]:checked');
+        const dishTypeCheckboxes = document.querySelectorAll('input[name="dish_type"]:checked');
+
+        const tastes = Array.from(tasteCheckboxes).map(checkbox => checkbox.value);
+        const dishTypes = Array.from(dishTypeCheckboxes).map(checkbox => checkbox.value);
+
+        if (!weightManagement || !tastes.length || !dishTypes.length) {
+            alert("すべての質問に答えてください！");
+        }
+    });
 </script>
+</head>
+<body>
+    <div class="page-header"><%- include('partials/header.ejs') %></div>
+    <main>
+        <div class="form-container">
+
+            <ul class="tab-nav">
+                <li class="tab" data-tab="list" onclick="switchToList()">投稿記事を見る</li>
+                <li class="tab active" data-tab="create-form" onclick="switchToCreateForm()">記事を作成する</li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="food-list" class="tab-panel">
+                    <h3>投稿記事を見る</h3>
+                    <div id="search-bar">
+                        <input type="text" id="food-search" placeholder="料理の名前から探す..." />
+                    </div>
+                    <ul id="food-items">
+                      <% for (const food of my_foods) { %>
+                        <li class="food-item" data-name="<%= food.name.toLowerCase() %>">
+                            <div class="food-info">
+                              <div class="food-details">
+                                <img src="<%= food.image %>" alt="<%= food.name %> Image" style="height: 60px; width: auto;">
+                                <span><%= food.name %></span>
+                              </div>
+                              <div class="buttons-container">
+                                <button class="view-button" data-food-id="<%= food.id %>">
+                                  <i class="fas fa-eye"></i>
+                                  <span class="view-info">詳細</span>
+                                </button>
+                                <button class="delete-button" data-food-id="<%= food.id %>">
+                                  <i class="fas fa-trash"></i>
+                                  <span class="delete-confirmation">消去</span>
+                                </button>
+                              </div>
+                            </div>
+                        </li>
+                      <% } %>
+                    </ul>
+                </div>
+
+                <form id="create-form" action="/food/create" method="POST" class="tab-panel active">
+                    <input type="hidden" name="username" value="<%= username %>">
+                    <div class="form-layout">
+                        <div class="form-left">
+                            <label for="name">料理の名前</label>
+                            <input type="text" id="name" name="name" required>
+
+                            <label for="description">説明</label>
+                            <textarea id="description" name="description" required></textarea>
+
+                            <label for="ingredients">材料</label>
+                            <textarea id="ingredients" name="ingredients" required></textarea>
+
+                            <label for="recipe">作り方</label>
+                            <textarea id="recipe" name="recipe" required></textarea>
+
+                            <label for="locations">おすすめの店</label>
+                            <input type="text" id="locations" name="locations" required>
+
+                            <div class="question">
+                              <label>体重管理</label>
+                              <div>
+                                <input type="radio" name="weight_management" value="yes" id="yes"> <label for="yes">O</label>
+                                <input type="radio" name="weight_management" value="no" id="no"> <label for="no">X</label>
+                              </div>
+                            </div>
+                            <div class="question">
+                              <label>料理の味</label>
+                              <div>
+                                <input type="checkbox" name="taste" value="辛味">辛い
+                                <input type="checkbox" name="taste" value="酸味">酸っぱい
+                                <input type="checkbox" name="taste" value="塩味">塩辛い
+                                <input type="checkbox" name="taste" value="甘味">甘い
+                              </div>
+                            </div>
+                            <div class="question">
+                              <label>料理の種類</label>
+                              <div>
+                                <input type="checkbox" name="dish_type" value="乾いた皿">乾物系
+                                <input type="checkbox" name="dish_type" value="水皿">汁物系
+                                <input type="checkbox" name="dish_type" value="デザート">デザート
+                                <input type="checkbox" name="dish_type" value="ベジタリアン料理">ベジタリアン
+                              </div>
+                            </div>
+                        </div>
+                        <div class="form-right">
+                            <label for="image">画像挿入</label>
+                            <input type="file" id="image" name="image" accept="image/*" onchange="handleImageUpload(event)" required style="display: none;" required>
+                            <input type="hidden" id="image_base64" name="image_base64" required>
+                            <img id="imagePreview" src="/public/img/blank.png" alt="Food Item Preview" style="width: 200px; height: 200px; cursor: pointer;" onclick="document.getElementById('image').click();">
+                            <button type="submit" id="submit">投稿</button>
+                            <% if (success_msg.length > 0) { %>
+                                <div class="alert alert-success"><%= success_msg %></div>
+                            <% } %>
+                            <% if (error_msg.length > 0) { %>
+                                <div class="alert alert-danger"><%= error_msg %></div>
+                            <% } %>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 <style>
+ul {
+    list-style-type: none;
+}
+
 .tab-nav {
     list-style: none;
     padding: 0;
@@ -144,6 +248,47 @@
     border: 1px solid #ccc; /* Optional: Add a border around the image */
     border-radius: 4px; /* Optional: Add rounded corners */
     margin-top: 10px; /* Space between the input and the image */
+}
+
+.food-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+}
+
+.food-info {
+  display: flex;
+  justify-content: space-between; 
+}
+
+.food-details {
+  display: flex;
+  align-items: center; 
+}
+
+.food-info img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.view-button,
+.delete-button {
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.view-button i,
+.delete-button i {
+  margin-right: 5px;
+  font-size: 16px;
 }
 </style>
 </body>
