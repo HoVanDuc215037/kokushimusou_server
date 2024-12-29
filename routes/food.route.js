@@ -5,13 +5,16 @@ const router = express.Router();
 
 router.get('/', foodController.foodsPage);
 
-router.get('/settings', foodController.anketPage); // user can select like, dislike tags of food
-router.post('/settings', foodController.anketRequest);
+router.get('/favorites', foodController.favoritesPage);
 
 router.get('/create', foodController.createFoodPage); // add new food
 router.post('/create', foodController.createFoodRequest);
 
-router.get('/:id', foodController.foodDetailPage); // detail of one food
+router.get('/:id', foodController.foodDetailPage);
+router.delete('/:id', foodController.foodDetailDelete);
+router.get('/:id/like', foodController.foodDetailLike);
+router.delete('/:id/like', foodController.foodDetailDislike);
+router.post('/:id/review', foodController.foodDetailComment);
 
 module.exports = [
   router

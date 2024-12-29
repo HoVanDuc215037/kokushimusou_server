@@ -1,4 +1,5 @@
 const express = require('express');
+//const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
@@ -8,16 +9,14 @@ const router = require('./routes/router.js');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const dotenv = require('dotenv')
-const User = require('./models/user');
-const surveyRoute = require('./routes/survey.route');
-
+//srequire('./passport-setup');
 
 dotenv.config();
 const queryString = process.env.MONGODB_URI;
 
 app.set('views', path.join(__dirname, 'views')) 
 app.set('view engine', 'ejs')
-//app.use(express.json())
+
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors())
@@ -36,18 +35,21 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Set to true if using HTTPS
 }));
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 // flash - notification
 app.use(flash());
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    next();
+  res.locals.username = req.session.username || 'ゲスト';
+  res.locals.role = req.session.role || 'guest'; 
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
 });
 
 //sử dụng file router.js
 app.use('/', router);
-app.use(surveyRoute);
 
 mongoose.connect(queryString, {
   useNewUrlParser: true,

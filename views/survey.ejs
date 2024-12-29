@@ -4,53 +4,190 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>アンケートフォーム</title>
-  <link rel="stylesheet" href="../public/css/survey.css">
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <link rel="stylesheet" href="/public/css/xamplepage.css">
 </head>
 <body>
+  <div class="page-header"><%- include('partials/header.ejs') %></div>
   <div class="survey-container">
     <header>
       <h1>アンケートフォーム</h1>
     </header>
-
     <section class="survey-content">
       <h3>食品嗜好調査票</h3>
+      <input type="hidden" name="username" value="<%= username %>">
+<div class="question">
+    <label>体重管理をされていますか?</label>
+    <div class="choice">
+        <input type="radio" name="weight_management" value="yes" id="yes" <%= survey.weight_management === 'yes' ? 'checked' : '' %>> <label for="yes">O</label>
+        <input type="radio" name="weight_management" value="no" id="no" <%= survey.weight_management === 'no' ? 'checked' : '' %>> <label for="no">X</label>
+    </div>
 
-      <div class="question">
-        <label>体重管理をされていますか?</label>
-        <div class="choice">
-          <input type="radio" name="weight_management" value="yes" id="yes"> <label for="yes">O</label>
-          <input type="radio" name="weight_management" value="no" id="no"> <label for="no">X</label>
-        </div>
-      </div>
-
-      <div class="question">
+    <div class="question">
         <label>お好みの料理の味をお選びください。</label>
-        <select id="taste" name="taste">
-          <option value="">料理の味を選択してください</option>
-          <option value="辛味">辛味</option>
-          <option value="酸味">酸味</option>
-          <option value="塩味">塩味</option>
-          <option value="甘味">甘味</option>
-        </select>
-      </div>
+        <div>
+            <input type="checkbox" name="taste" value="辛味" <%= survey.tastes.includes("辛味") ? 'checked' : '' %>>辛味
+            <input type="checkbox" name="taste" value="酸味" <%= survey.tastes.includes("酸味") ? 'checked' : '' %>>酸味
+            <input type="checkbox" name="taste" value="塩味" <%= survey.tastes.includes("塩味") ? 'checked' : '' %>>塩味
+            <input type="checkbox" name="taste" value="甘味" <%= survey.tastes.includes("甘味") ? 'checked' : '' %>>甘味
+        </div>
+    </div>
 
-      <div class="question">
+    <div class="question">
         <label>ご希望の料理の種類をお選びください。</label>
-        <select id="dish_type" name="dish_type">
-          <option value="">料理の種類を選択してください</option>
-          <option value="乾いた皿">乾いた皿</option>
-          <option value="水皿">水皿</option>
-          <option value="デザート">デザート</option>
-          <option value="ベジタリアン料理">ベジタリアン料理</option>
-        </select>
-      </div>
+        <div>
+            <input type="checkbox" name="dish_type" value="乾いた皿" <%= survey.dish_types.includes("乾いた皿") ? 'checked' : '' %>> 乾いた皿
+            <input type="checkbox" name="dish_type" value="水皿" <%= survey.dish_types.includes("水皿") ? 'checked' : '' %>>水皿
+            <input type="checkbox" name="dish_type" value="デザート" <%= survey.dish_types.includes("デザート") ? 'checked' : '' %>>デザート
+            <input type="checkbox" name="dish_type" value="ベジタリアン料理" <%= survey.dish_types.includes("ベジタリアン料理") ? 'checked' : '' %>>ベジタリアン料理
+        </div>
+    </div>
+</div>
     </section>
-
     <footer>
       <button id="submit-survey">完了</button>
     </footer>
   </div>
+  <style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+/* Container chính của khảo sát */
+.survey-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+/* Phần header */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+header h1 {
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+/* Tiêu đề khảo sát */
+.survey-content h3 {
+  font-size: 18px;
+  margin: 20px 0;
+  color: #333;
+  text-align: center;
+}
+/* Câu hỏi */
+.question {
+  margin-bottom: 20px;
+}
+.question .choice {
+  display: flex;
+  width: 30%;
+  justify-content:space-between
+}
+.question .choice label {
+  margin: 0;
+  margin-top: 3px;
+  margin-right: 40px;
+}
+.question label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #495057;
+}
+.question input[type="radio"] {
+  margin-right: 5px;
+}
+.question select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+}
+/* Nút hoàn thành */
+footer {
+  text-align: center;
+  margin-top: 20px;
+}
+footer button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+footer button:hover {
+  background-color: #0056b3;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .survey-container {
+    padding: 15px;
+  }
+  header h1 {
+    font-size: 20px;
+  }
+  header h2 {
+    font-size: 14px;
+  }
+  footer button {
+    width: 100%;
+  }
+}
+  </style>
+  <script>
 
-  <script src="/javascript/survey.js"></script>
+document.getElementById('submit-survey').addEventListener('click', async () => {
+  const hiddenInput = document.querySelector('input[name="username"]');
+  const username = hiddenInput.value; 
+  const weightManagement = document.querySelector('input[name="weight_management"]:checked');
+  const tasteCheckboxes = document.querySelectorAll('input[name="taste"]:checked');
+  const dishTypeCheckboxes = document.querySelectorAll('input[name="dish_type"]:checked');
+
+  // チェックボックスの値を配列で取得
+  const tastes = Array.from(tasteCheckboxes).map(checkbox => checkbox.value);
+  const dishTypes = Array.from(dishTypeCheckboxes).map(checkbox => checkbox.value);
+
+  if (!weightManagement || !tastes.length || !dishTypes.length) {
+    alert("すべての質問に答えてください！");
+    return;
+  }
+
+  const surveyData = {
+    username,
+    weight_management: weightManagement.value,
+    tastes,
+    dish_types: dishTypes,
+  };
+  try {
+    const response = await fetch('/user/api/survey', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(surveyData),
+    });
+    if (response.ok) {
+      alert("アンケートを送信しました！");
+    } else {
+      console.log(response)
+      alert("エラーが発生しました。もう一度やり直してください。");
+    }
+  } catch (error) {
+    console.error("エラー:", error);
+    alert("エラーが発生しました。もう一度やり直してください。");
+  }
+});
+  </script>
 </body>
 </html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好きな料理</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="/public/css/xamplepage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="page-header"><%- include('partials/header.ejs') %></div>
+    <main>
+        <div class="form-container">
+            <h3>好きな料理</h3>
+                    <div id="search-bar">
+                        <input type="text" id="food-search" placeholder="料理の名前から探す..." />
+                    </div>
+                    <ul id="food-items">
+                      <% for (const food of foods) { %>
+                        <li class="food-item" data-name="<%= food.name.toLowerCase() %>">
+                            <div class="food-info">
+                              <div class="food-details">
+                                <img src="<%= food.image %>" alt="<%= food.name %> Image" style="height: 60px; width: auto;">
+                                <span><%= food.name %></span>
+                              </div>
+                              <div class="buttons-container">
+                                <button class="view-button" data-food-id="<%= food.id %>">
+                                  <i class="fas fa-eye"></i>
+                                  <span class="view-info">詳細</span>
+                                </button>
+                                <button class="delete-button" data-food-id="<%= food.id %>">
+                                  <i class="fas fa-trash"></i>
+                                  <span class="delete-confirmation">消去</span>
+                                </button>
+                              </div>
+                            </div>
+                        </li>
+                      <% } %>
+                    </ul>
+        </div>
+    </main>
+    <script>
+
+        const searchInput = document.getElementById('food-search');
+        const foodItems = document.querySelectorAll('.food-item');
+
+        console.log(searchInput)
+        console.log(foodItems)
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            foodItems.forEach(item => {
+                const foodName = item.getAttribute('data-name');
+                if (foodName.includes(searchTerm)) {
+                    item.style.display = ''; // Show item
+                } else {
+                    item.style.display = 'none'; // Hide item
+                }
+            });
+        });
+
+        const viewButtons = document.querySelectorAll('.view-button');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const foodId = button.dataset.foodId;
+                window.open(`/food/${foodId}`, '_blank'); 
+            });
+        });
+
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const foodId = button.dataset.foodId;
+
+                try {
+                    const response = await fetch(`/food/${foodId}/like`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Food disliked successfully');
+                        window.location.reload();
+                    } else {
+                        alert('Error disliking food');
+                    }
+                } catch (error) {
+                    console.error('Error disliking food:', error);
+                }
+            });
+        });
+
+    </script>
+<style>
+ul {
+    list-style-type: none;
+}
+
+.tab-nav {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1; /* Make each tab take equal space */
+    padding: 10px 0; /* Vertical padding */
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    text-align: center; /* Center the text */
+}
+
+.tab.active {
+    background-color: white;
+    font-weight: bold;
+    border-top: 2px solid #4CAF50; /* Highlight active tab */
+}
+
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: white;
+}
+
+#imagePreview {
+    border: 1px solid #ccc; /* Optional: Add a border around the image */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    margin-top: 10px; /* Space between the input and the image */
+}
+
+.food-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+}
+
+/*.food-info {
+  display: flex;
+  align-items: center;
+}*/
+.food-info {
+  display: flex;
+  justify-content: space-between; 
+}
+
+.food-details {
+  display: flex;
+  align-items: center; 
+}
+
+.food-info img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.view-button,
+.delete-button {
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.view-button i,
+.delete-button i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+</style>
+</body>
+</html>
