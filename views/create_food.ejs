@@ -23,6 +23,11 @@
     }
 
     function switchToCreateForm() {
+        const listTab = document.querySelector('[data-tab="list"]');
+        const createFormTab = document.querySelector('[data-tab="create-form"]');
+        createFormTab.classList.add('active');
+        listTab.classList.remove('active');
+
         const createFormPanel = document.getElementById('create-form');
         const foodListPanel = document.getElementById('food-list');
 
@@ -31,6 +36,11 @@
     }
 
     function switchToList() {
+        const listTab = document.querySelector('[data-tab="list"]');
+        const createFormTab = document.querySelector('[data-tab="create-form"]');
+        createFormTab.classList.remove('active');
+        listTab.classList.add('active');
+
         const createFormPanel = document.getElementById('create-form');
         const foodListPanel = document.getElementById('food-list');
 
@@ -216,18 +226,19 @@ ul {
 }
 
 .tab {
-    flex: 1; /* Make each tab take equal space */
-    padding: 10px 0; /* Vertical padding */
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    text-align: center; /* Center the text */
+  flex: 1; /* Make each tab take equal space */
+  padding: 10px 0; /* Vertical padding */
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  text-align: center; /* Center the text */
+  cursor: pointer; /* Add cursor pointer for hover effect */
 }
 
 .tab.active {
-    background-color: white;
-    font-weight: bold;
-    border-top: 2px solid #4CAF50; /* Highlight active tab */
+  background-color: white;
+  font-weight: bold;
+  border-top: 2px solid #4CAF50; /* Highlight active tab */
 }
 
 .tab-content {
@@ -290,6 +301,11 @@ ul {
   margin-right: 5px;
   font-size: 16px;
 }
+
+.question div {
+    display: flex; /* Use flexbox for horizontal layout */
+    align-items: center; /* Vertically center the radio buttons */
+  }
 </style>
 </body>
 </html>
